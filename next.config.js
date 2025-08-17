@@ -6,7 +6,9 @@ const nextConfig = {
   },
   images: { unoptimized: true },
   basePath: '/astronomyclub-iitdh',
-  assetPrefix: '/astronomyclub-iitdh/',
+  assetPrefix: '/astronomyclub-iitdh/',  // assetPrefix REQUIRES trailing slash for GitHub Pages
+  trailingSlash: true,
+  skipTrailingSlashRedirect: true,
 };
 
 module.exports = nextConfig;
