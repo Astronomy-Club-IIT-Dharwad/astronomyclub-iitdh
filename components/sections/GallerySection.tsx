@@ -1,9 +1,12 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { motion, useInView, AnimatePresence, easeOut, Variants } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { X, ZoomIn, Filter } from 'lucide-react';
+
+// Create motion components
+const MotionButton = motion(Button);
 
 const categories = ['All', 'Nebulae', 'Planets', 'Galaxies', 'Constellations'];
 
@@ -62,7 +65,7 @@ export default function GallerySection() {
     ? images 
     : images.filter(img => img.category === selectedCategory);
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -73,7 +76,7 @@ export default function GallerySection() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 60, scale: 0.95 },
     visible: {
       opacity: 1,
@@ -81,26 +84,27 @@ export default function GallerySection() {
       scale: 1,
       transition: {
         duration: 0.8,
-        ease: [0.22, 1, 0.36, 1]
+        ease: easeOut
       }
     }
   };
 
-  const imageVariants = {
+  const imageVariants: Variants = {
     hidden: { opacity: 0, scale: 0.8 },
     visible: { 
       opacity: 1, 
       scale: 1,
       transition: {
         duration: 0.5,
-        ease: 'easeOut'
+        ease: easeOut
       }
     },
     exit: { 
       opacity: 0, 
       scale: 0.8,
       transition: {
-        duration: 0.3
+        duration: 0.3,
+        ease: easeOut
       }
     }
   };
@@ -163,7 +167,7 @@ export default function GallerySection() {
           {/* Filter Buttons */}
           <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-4 mb-12">
             {categories.map((category) => (
-              <Button
+              <MotionButton
                 key={category}
                 variant={selectedCategory === category ? "default" : "outline"}
                 onClick={() => setSelectedCategory(category)}
@@ -172,10 +176,13 @@ export default function GallerySection() {
                     ? 'bg-aurora-green text-space-navy hover:bg-aurora-green/90'
                     : 'border-aurora-green text-aurora-green hover:bg-aurora-green/10'
                 }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2, ease: easeOut }}
               >
                 <Filter className="mr-2 h-4 w-4" />
                 {category}
-              </Button>
+              </MotionButton>
             ))}
           </motion.div>
 
@@ -261,14 +268,17 @@ export default function GallerySection() {
                       {selectedImage.category}
                     </p>
                   </div>
-                  <Button
+                  <MotionButton
                     variant="ghost"
                     size="sm"
                     onClick={() => setSelectedImage(null)}
                     className="text-cosmic-white hover:text-aurora-green"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.2, ease: easeOut }}
                   >
                     <X className="h-6 w-6" />
-                  </Button>
+                  </MotionButton>
                 </div>
                 <p className="text-cosmic-white/80 leading-relaxed">
                   {selectedImage.description}

@@ -1,9 +1,25 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Telescope } from 'lucide-react';
+import { motion, AnimatePresence, Variants, easeOut, Transition } from 'framer-motion';
+import { Menu, X, Telescope, LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+// Create motion components
+const MotionButton = motion(Button);
+const MotionIcon = ({
+  icon: Icon,
+  className,
+  ...props
+}: {
+  icon: LucideIcon;
+  className?: string;
+  [key: string]: any;
+}) => (
+  <motion.div {...props}>
+    <Icon className={className} />
+  </motion.div>
+);
 
 interface NavigationProps {
   activeSection: string;
@@ -32,32 +48,32 @@ export default function Navigation({ activeSection, onSectionChange }: Navigatio
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navVariants = {
+  const navVariants: Variants = {
     hidden: { y: -100, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
         duration: 0.8,
-        ease: 'easeOut'
+        ease: easeOut
       }
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: -20 },
-    visible: (i: number) => ({
+    visible: {
       opacity: 1,
       y: 0,
       transition: {
-        delay: i * 0.1 + 0.5,
+        delay: 0.5,
         duration: 0.6,
-        ease: 'easeOut'
+        ease: easeOut
       }
-    })
+    }
   };
 
-  const mobileMenuVariants = {
+  const mobileMenuVariants: Variants = {
     hidden: {
       x: '100%',
       opacity: 0
@@ -67,7 +83,7 @@ export default function Navigation({ activeSection, onSectionChange }: Navigatio
       opacity: 1,
       transition: {
         duration: 0.5,
-        ease: 'easeOut'
+        ease: easeOut
       }
     }
   };
@@ -110,7 +126,7 @@ export default function Navigation({ activeSection, onSectionChange }: Navigatio
                   animate="visible"
                   custom={index}
                 >
-                  <Button
+                  <MotionButton
                     variant="ghost"
                     onClick={() => onSectionChange(item.id)}
                     className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 hover:text-aurora-green ${
@@ -118,6 +134,8 @@ export default function Navigation({ activeSection, onSectionChange }: Navigatio
                         ? 'text-aurora-green'
                         : 'text-cosmic-white/80'
                     }`}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.2, ease: easeOut }}
                   >
                     {item.label}
                     {activeSection === item.id && (
@@ -130,21 +148,24 @@ export default function Navigation({ activeSection, onSectionChange }: Navigatio
                       />
                     )}
                     <div className="absolute inset-0 rounded-lg bg-aurora-green/10 opacity-0 hover:opacity-100 transition-opacity duration-300" />
-                  </Button>
+                  </MotionButton>
                 </motion.div>
               ))}
             </div>
 
             {/* Mobile Menu Button */}
             <div className="lg:hidden">
-              <Button
+              <MotionButton
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="text-cosmic-white hover:text-aurora-green transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2, ease: easeOut }}
               >
                 {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </Button>
+              </MotionButton>
             </div>
           </div>
         </div>
@@ -181,14 +202,17 @@ export default function Navigation({ activeSection, onSectionChange }: Navigatio
                       Menu
                     </span>
                   </div>
-                  <Button
+                  <MotionButton
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsMenuOpen(false)}
                     className="text-cosmic-white hover:text-aurora-green"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.2, ease: easeOut }}
                   >
                     <X className="h-5 w-5" />
-                  </Button>
+                  </MotionButton>
                 </div>
 
                 {/* Navigation Items */}
@@ -200,7 +224,7 @@ export default function Navigation({ activeSection, onSectionChange }: Navigatio
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 + 0.2, duration: 0.5 }}
                     >
-                      <Button
+                      <MotionButton
                         variant="ghost"
                         onClick={() => {
                           onSectionChange(item.id);
@@ -211,9 +235,12 @@ export default function Navigation({ activeSection, onSectionChange }: Navigatio
                             ? 'text-aurora-green bg-aurora-green/10'
                             : 'text-cosmic-white/80 hover:text-aurora-green hover:bg-aurora-green/5'
                         }`}
+                        whileHover={{ scale: 1.02, x: 4 }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{ duration: 0.2, ease: easeOut }}
                       >
                         {item.label}
-                      </Button>
+                      </MotionButton>
                     </motion.div>
                   ))}
                 </div>

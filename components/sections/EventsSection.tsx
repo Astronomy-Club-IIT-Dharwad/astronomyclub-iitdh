@@ -1,10 +1,13 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, easeOut, Variants } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar, Clock, MapPin, Users, Rocket, Star, Camera, BookOpen } from 'lucide-react';
+
+// Create motion components
+const MotionButton = motion(Button);
 
 const events = [
   {
@@ -88,7 +91,7 @@ export default function EventsSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -99,26 +102,26 @@ export default function EventsSection() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 60 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.8,
-        ease: 'easeInOut'
+        ease: easeOut
       }
     }
   };
 
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { opacity: 0, x: -50 },
     visible: {
       opacity: 1,
       x: 0,
       transition: {
         duration: 0.8,
-        ease: 'easeOut'
+        ease: easeOut
       }
     }
   };
@@ -285,16 +288,24 @@ export default function EventsSection() {
 
                         {/* Action Buttons */}
                         <div className="flex flex-wrap gap-4">
-                          <Button className="bg-aurora-green hover:bg-aurora-green/90 text-space-navy font-orbitron font-bold transition-all duration-300">
+                          <MotionButton 
+                            className="bg-aurora-green hover:bg-aurora-green/90 text-space-navy font-orbitron font-bold transition-all duration-300"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{ duration: 0.2, ease: easeOut }}
+                          >
                             <Rocket className="mr-2 h-4 w-4" />
                             Register Now
-                          </Button>
-                          <Button 
+                          </MotionButton>
+                          <MotionButton 
                             variant="outline" 
                             className="border-ethereal-cyan text-ethereal-cyan hover:bg-ethereal-cyan/10"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{ duration: 0.2, ease: easeOut }}
                           >
                             Learn More
-                          </Button>
+                          </MotionButton>
                         </div>
                       </div>
 
@@ -343,12 +354,15 @@ export default function EventsSection() {
             <p className="text-cosmic-white/80 text-lg mb-6">
               Don't miss out on our upcoming celestial adventures
             </p>
-            <Button 
+            <MotionButton 
               size="lg"
-              className="bg-stellar-gold hover:bg-stellar-gold/90 text-space-navy font-orbitron font-bold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105"
+              className="bg-stellar-gold hover:bg-stellar-gold/90 text-space-navy font-orbitron font-bold px-8 py-4 rounded-full transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.2, ease: easeOut }}
             >
               View Full Calendar
-            </Button>
+            </MotionButton>
           </motion.div>
         </motion.div>
       </div>

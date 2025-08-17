@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, easeOut, Variants } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Mail, Linkedin, Award } from 'lucide-react';
 
@@ -53,7 +53,7 @@ export default function TeamSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -64,26 +64,26 @@ export default function TeamSection() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 60 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.8,
-        ease: [0.22, 1, 0.36, 1]
+        ease: easeOut
       }
     }
   };
 
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { opacity: 0, rotateY: -90 },
     visible: {
       opacity: 1,
       rotateY: 0,
       transition: {
         duration: 0.8,
-        ease: 'easeOut'
+        ease: easeOut
       }
     }
   };

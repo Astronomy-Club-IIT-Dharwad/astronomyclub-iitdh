@@ -1,11 +1,14 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, easeOut, Variants } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
+
+// Create motion components
+const MotionButton = motion(Button);
 import { Mail, Phone, MapPin, Clock, Rocket, Send, Satellite } from 'lucide-react';
 
 export default function ContactSection() {
@@ -66,7 +69,7 @@ export default function ContactSection() {
     }
   ];
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -77,38 +80,38 @@ export default function ContactSection() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 60 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.8,
-        ease: [0.22, 1, 0.36, 1]
+        ease: easeOut
       }
     }
   };
 
-  const formVariants = {
+  const formVariants: Variants = {
     hidden: { opacity: 0, x: -50 },
     visible: {
       opacity: 1,
       x: 0,
       transition: {
         duration: 0.8,
-        ease: 'easeOut'
+        ease: easeOut
       }
     }
   };
 
-  const infoVariants = {
+  const infoVariants: Variants = {
     hidden: { opacity: 0, x: 50 },
     visible: {
       opacity: 1,
       x: 0,
       transition: {
         duration: 0.8,
-        ease: 'easeOut'
+        ease: easeOut
       }
     }
   };
@@ -258,10 +261,13 @@ export default function ContactSection() {
                     </div>
 
                     {/* Submit Button */}
-                    <Button
+                    <MotionButton
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-aurora-green hover:bg-aurora-green/90 text-space-navy font-orbitron font-bold py-3 transition-all duration-300 hover:scale-105 disabled:scale-100 disabled:opacity-50"
+                      className="w-full bg-aurora-green hover:bg-aurora-green/90 text-space-navy font-orbitron font-bold py-3 transition-all duration-300 disabled:opacity-50"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ duration: 0.2, ease: easeOut }}
                     >
                       {isSubmitting ? (
                         <>
@@ -280,7 +286,7 @@ export default function ContactSection() {
                           Launch Message
                         </>
                       )}
-                    </Button>
+                    </MotionButton>
                   </form>
                 </CardContent>
               </Card>

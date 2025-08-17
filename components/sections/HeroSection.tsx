@@ -1,14 +1,30 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, Variants, easeOut } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Telescope, Users, Calendar } from 'lucide-react';
+import { ChevronDown, Telescope, Users, Calendar, LucideIcon } from 'lucide-react';
 import MoonPhase from '@/components/MoonPhase';
 import dynamic from 'next/dynamic';
 
 // Dynamically import Three.js components
 const CelestialObjects = dynamic(() => import('@/components/3d/CelestialObjects'), { ssr: false });
+
+// Create motion components
+const MotionButton = motion(Button);
+const MotionIcon = ({
+  icon: Icon,
+  className,
+  ...props
+}: {
+  icon: LucideIcon;
+  className?: string;
+  [key: string]: any;
+}) => (
+  <motion.div {...props}>
+    <Icon className={className} />
+  </motion.div>
+);
 
 interface HeroSectionProps {
   onExploreClick: () => void;
@@ -38,7 +54,7 @@ export default function HeroSection({ onExploreClick }: HeroSectionProps) {
     }
   };
 
-  const letterVariants = {
+  const letterVariants: Variants = {
     hidden: { 
       opacity: 0, 
       y: 50,
@@ -50,22 +66,21 @@ export default function HeroSection({ onExploreClick }: HeroSectionProps) {
       rotateX: 0,
       transition: {
         duration: 0.8,
-        ease: [0.22, 1, 0.36, 1]
+        ease: easeOut
       }
     }
   };
 
-  const statsVariants = {
+  const statsVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
-    visible: (i: number) => ({
+    visible: {
       opacity: 1,
       y: 0,
       transition: {
-        delay: 2 + i * 0.2,
         duration: 0.8,
-        ease: 'easeOut'
+        ease: easeOut
       }
-    })
+    }
   };
 
   return (
@@ -151,22 +166,26 @@ export default function HeroSection({ onExploreClick }: HeroSectionProps) {
           transition={{ delay: 2.5, duration: 0.8 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
         >
-          <Button
+          <MotionButton
             onClick={onExploreClick}
             size="lg"
             className="bg-stellar-gold hover:bg-stellar-gold/90 text-space-navy font-orbitron font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-stellar-gold/25"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <Telescope className="mr-2 h-5 w-5" />
             Explore the Universe
-          </Button>
+          </MotionButton>
           
-          <Button
+          <MotionButton
             variant="outline"
             size="lg"
-            className="border-aurora-green text-aurora-green hover:bg-aurora-green hover:text-space-navy font-orbitron font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 hover:scale-105"
+            className="border-aurora-green text-aurora-green hover:bg-aurora-green hover:text-space-navy font-orbitron font-bold px-8 py-4 rounded-full text-lg transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             Join Our Club
-          </Button>
+          </MotionButton>
         </motion.div>
 
         {/* Stats */}
@@ -186,7 +205,13 @@ export default function HeroSection({ onExploreClick }: HeroSectionProps) {
               custom={index}
               className="glass-morphism backdrop-blur-md rounded-xl p-4 text-center hover:bg-white/5 transition-all duration-300"
             >
-              <stat.icon className="h-8 w-8 text-aurora-green mx-auto mb-2" />
+              <MotionIcon 
+                icon={stat.icon} 
+                className="h-8 w-8 text-aurora-green mx-auto mb-2"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 2 + index * 0.2, duration: 0.5 }}
+              />
               <p className="text-2xl font-orbitron font-bold text-stellar-gold">
                 {stat.value}
               </p>

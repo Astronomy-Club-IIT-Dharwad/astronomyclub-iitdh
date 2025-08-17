@@ -5,6 +5,8 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: { unoptimized: true },
+  basePath: '/astronomyclub-iitdh',
+  assetPrefix: '/astronomyclub-iitdh/',
 };
 
 module.exports = nextConfig;
