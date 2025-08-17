@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --space-navy: #0B1426;
+  --rich-purple: #2D1B69;
+  --cosmic-black: #000814;
+  --aurora-green: #00FF7F;
+  --ethereal-cyan: #40E0D0;
+  --soft-mint: #98FB98;
+  --stellar-gold: #FFD700;
+  --nebula-pink: #FF69B4;
+  --cosmic-white: #F8F8FF;
+}
+
+@layer base {
+  :root {
+    --background: 11 69% 8%;
+    --foreground: 240 100% 99%;
+    --card: 11 69% 8%;
+    --card-foreground: 240 100% 99%;
+    --popover: 11 69% 8%;
+    --popover-foreground: 240 100% 99%;
+    --primary: 51 100% 50%;
+    --primary-foreground: 11 69% 8%;
+    --secondary: 273 58% 26%;
+    --secondary-foreground: 240 100% 99%;
+    --muted: 11 69% 15%;
+    --muted-foreground: 240 5% 64%;
+    --accent: 273 58% 26%;
+    --accent-foreground: 240 100% 99%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 240 100% 99%;
+    --border: 273 58% 26%;
+    --input: 273 58% 26%;
+    --ring: 51 100% 50%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-space-navy text-cosmic-white;
+  }
+}
+
+@layer utilities {
+  .bg-space-navy { background-color: var(--space-navy); }
+  .bg-rich-purple { background-color: var(--rich-purple); }
+  .bg-cosmic-black { background-color: var(--cosmic-black); }
+  .text-aurora-green { color: var(--aurora-green); }
+  .text-ethereal-cyan { color: var(--ethereal-cyan); }
+  .text-soft-mint { color: var(--soft-mint); }
+  .text-stellar-gold { color: var(--stellar-gold); }
+  .text-nebula-pink { color: var(--nebula-pink); }
+  .text-cosmic-white { color: var(--cosmic-white); }
+  
+  .gradient-carina {
+    background: linear-gradient(135deg, #FF4500 0%, #DC143C 50%, #4169E1 100%);
+  }
+  
+  .gradient-aurora {
+    background: linear-gradient(135deg, var(--aurora-green) 0%, var(--ethereal-cyan) 50%, var(--soft-mint) 100%);
+  }
+  
+  .glass-morphism {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .aurora-glow {
+    box-shadow: 0 0 20px rgba(0, 255, 127, 0.3);
+  }
+  
+  .stellar-glow {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes aurora {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(100%) skewX(-15deg); }
+}
+
+@keyframes orbit {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 127, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(0, 255, 127, 0.7); }
+}
+
+.animate-twinkle { animation: twinkle 2s ease-in-out infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-aurora { animation: aurora 8s linear infinite; }
+.animate-orbit { animation: orbit 20s linear infinite; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--space-navy);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--aurora-green), var(--ethereal-cyan));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, var(--ethereal-cyan), var(--soft-mint));
+}

@@ -1,0 +1,198 @@
+'use client';
+
+import { useRef, useMemo } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Sphere } from '@react-three/drei';
+import * as THREE from 'three';
+
+function Planet({ 
+  position, 
+  radius, 
+  color, 
+  orbitRadius, 
+  orbitSpeed, 
+  rotationSpeed = 0.01 
+}: {
+  position: [number, number, number];
+  radius: number;
+  color: string;
+  orbitRadius?: number;
+  orbitSpeed?: number;
+  rotationSpeed?: number;
+}) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const groupRef = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += rotationSpeed;
+    }
+    
+    if (groupRef.current && orbitRadius && orbitSpeed) {
+      groupRef.current.rotation.y = state.clock.elapsedTime * orbitSpeed;
+    }
+  });
+
+  const Content = (
+    <Sphere ref={meshRef} args={[radius, 32, 32]} position={orbitRadius ? [orbitRadius, 0, 0] : position}>
+      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.1} />
+    </Sphere>
+  );
+
+  return orbitRadius ? (
+    <group ref={groupRef}>
+      {Content}
+    </group>
+  ) : Content;
+}
+
+function Saturn() {
+  const planetRef = useRef<THREE.Group>(null);
+  const ringsRef = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    if (planetRef.current) {
+      planetRef.current.rotation.y = state.clock.elapsedTime * 0.005;
+      planetRef.current.position.x = Math.sin(state.clock.elapsedTime * 0.3) * 8;
+      planetRef.current.position.z = Math.cos(state.clock.elapsedTime * 0.3) * 8;
+    }
+    
+    if (ringsRef.current) {
+      ringsRef.current.rotation.z = state.clock.elapsedTime * 0.02;
+    }
+  });
+
+  const ringGeometry = useMemo(() => {
+    const geometry = new THREE.RingGeometry(1.5, 2.5, 64);
+    const positions = geometry.attributes.position.array as Float32Array;
+    const uvs = geometry.attributes.uv.array as Float32Array;
+    
+    for (let i = 0; i < uvs.length; i += 2) {
+      const u = uvs[i];
+      uvs[i] = u;
+      uvs[i + 1] = 0.5;
+    }
+    
+    return geometry;
+  }, []);
+
+  return (
+    <group ref={planetRef} position={[8, 2, -5]}>
+      {/* Saturn body */}
+      <Sphere args={[1.2, 32, 32]}>
+        <meshStandardMaterial color="#FAD5A5" emissive="#FAD5A5" emissiveIntensity={0.1} />
+      </Sphere>
+      
+      {/* Saturn rings */}
+      <mesh ref={ringsRef} geometry={ringGeometry} rotation={[Math.PI / 2, 0, 0]}>
+        <meshBasicMaterial 
+          color="#C4A570" 
+          transparent 
+          opacity={0.7} 
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+function AsteroidBelt() {
+  const groupRef = useRef<THREE.Group>(null);
+  
+  const asteroids = useMemo(() => {
+    return Array.from({ length: 50 }, () => ({
+      angle: Math.random() * Math.PI * 2,
+      radius: 12 + Math.random() * 4,
+      height: (Math.random() - 0.5) * 2,
+      size: 0.05 + Math.random() * 0.1,
+      speed: 0.001 + Math.random() * 0.002
+    }));
+  }, []);
+
+  useFrame((state) => {
+    if (groupRef.current) {
+      asteroids.forEach((asteroid, i) => {
+        const child = groupRef.current!.children[i] as THREE.Mesh;
+        if (child) {
+          asteroid.angle += asteroid.speed;
+          child.position.x = Math.cos(asteroid.angle) * asteroid.radius;
+          child.position.z = Math.sin(asteroid.angle) * asteroid.radius;
+          child.position.y = asteroid.height;
+          child.rotation.x += 0.01;
+          child.rotation.y += 0.01;
+        }
+      });
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      {asteroids.map((asteroid, i) => (
+        <Sphere key={i} args={[asteroid.size, 8, 8]}>
+          <meshStandardMaterial color="#8C7853" />
+        </Sphere>
+      ))}
+    </group>
+  );
+}
+
+function CelestialScene() {
+  return (
+    <>
+      <ambientLight intensity={0.3} />
+      <pointLight position={[0, 0, 0]} intensity={1} color="#FFD700" />
+      
+      {/* Planets */}
+      <Planet 
+        position={[-6, -1, 3]} 
+        radius={0.8} 
+        color="#4FC3F7" 
+        orbitRadius={6} 
+        orbitSpeed={0.01}
+        rotationSpeed={0.02}
+      />
+      
+      <Planet 
+        position={[4, 3, -2]} 
+        radius={0.6} 
+        color="#FF7043" 
+        orbitRadius={4} 
+        orbitSpeed={0.015}
+        rotationSpeed={0.025}
+      />
+      
+      <Planet 
+        position={[-8, 1, -6]} 
+        radius={1.0} 
+        color="#66BB6A" 
+        orbitRadius={8} 
+        orbitSpeed={0.008}
+        rotationSpeed={0.015}
+      />
+
+      {/* Saturn */}
+      <Saturn />
+      
+      {/* Asteroid Belt */}
+      <AsteroidBelt />
+    </>
+  );
+}
+
+export default function CelestialObjects() {
+  return (
+    <Canvas
+      camera={{ position: [0, 0, 15], fov: 60 }}
+      style={{ 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        width: '100%', 
+        height: '100%',
+        pointerEvents: 'none'
+      }}
+    >
+      <CelestialScene />
+    </Canvas>
+  );
+}
