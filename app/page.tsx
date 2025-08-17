@@ -16,8 +16,17 @@ import ContactSection from '@/components/sections/ContactSection';
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Ensure component is mounted before accessing browser APIs
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
+    // Only run on client side after component is mounted
+    if (!isMounted) return;
+
     const handleScroll = () => {
       const sections = ['home', 'about', 'gallery', 'team', 'events', 'contact'];
       const scrollPosition = window.scrollY + 100;
@@ -33,9 +42,12 @@ export default function Home() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isMounted]);
 
   const scrollToSection = (sectionId: string) => {
+    // Additional safety check
+    if (typeof window === 'undefined') return;
+    
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -45,6 +57,11 @@ export default function Home() {
   const handleExploreClick = () => {
     scrollToSection('about');
   };
+
+  // Don't render until mounted to avoid hydration mismatches
+  if (!isMounted) {
+    return <div className="min-h-screen bg-space-navy" />; // Simple loading state
+  }
 
   return (
     <div className="min-h-screen bg-space-navy text-cosmic-white">
